@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Button, Linking, Alert, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Linking, Alert, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import BotaoFlutuante from '../components/BotaoFlutuante';
@@ -27,7 +27,12 @@ export default function Scanner({navigation}) {
 
 		if (!result.canceled) {
 			let scan = await BarCodeScanner.scanFromURLAsync(result.assets[0].uri);
-			handleBarCodeScanned(scan[0]);
+			if (scan.length == 0){
+				// pass
+			}
+			else{
+				handleBarCodeScanned(scan[0]);
+			}
 		}
 	};
 
@@ -51,7 +56,7 @@ export default function Scanner({navigation}) {
 				><Text style={styles.btnTexto}>ABRIR LINK NO NAVEGADOR</Text></Pressable>
 	};
 
-	const handleBarCodeScanned = ({ type, data }) => {
+	const handleBarCodeScanned = ({ data }) => {
 		(async () => {
 			const supported = await Linking.canOpenURL(data);
 			setSupported(supported);
@@ -59,6 +64,7 @@ export default function Scanner({navigation}) {
 		
 		setScanned(true);
 		setData(data);
+
 	};
 
 	if (hasPermission === null) {
