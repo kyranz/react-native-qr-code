@@ -1,9 +1,10 @@
 export default {
     colors: {
         brand: {
-            verde: '#09EAB4',
-            verdeEscuro: '#0C3C4C',
-            verdeClaro: '#8998d9'
+            vermelhoClaro: '#f74b4b',
+            vermelhoEscuro: '#d14343',
+            roxoClaro: '#8898d8',
+            roxoEscuro: '#6877ba'
         },
         neutral: {
             background: '#282a36',

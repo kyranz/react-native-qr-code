@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Button, Linking, Alert } from 'react-native';
+import { StyleSheet, Text, View, Button, Linking, Alert, Pressable } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import BotaoFlutuante from '../components/BotaoFlutuante';
@@ -22,26 +22,17 @@ export default function Scanner({navigation}) {
 	const pickImage = async () => {
 		let result = await ImagePicker.launchImageLibraryAsync({
 			mediaTypes: ImagePicker.MediaTypeOptions.All,
-			// allowsEditing: true,
-			// aspect: [4, 3],
 			quality: 1,
 		});
 
-		console.log(result.assets[0].uri);
-		console.log(typeof(result.assets[0].uri))
-
 		if (!result.canceled) {
-			let cu = await BarCodeScanner.scanFromURLAsync(result.assets[0].uri)
-			const porra = await Linking.canOpenURL(cu[0].data);
-			setSupported(porra);
-			setScanned(true);
-			setData(cu[0].data);
+			let scan = await BarCodeScanner.scanFromURLAsync(result.assets[0].uri);
+			handleBarCodeScanned(scan[0]);
 		}
 	};
 
 	const OpenURLButton = ({url, children}) => {
 		const handlePress = useCallback(async () => {
-		// const supported = await Linking.canOpenURL(url);
 
 		if (supported) {
 			await Linking.openURL(url);
@@ -50,14 +41,20 @@ export default function Scanner({navigation}) {
 		}
 		}, [url]);
 
-		return <Button title={children} onPress={handlePress} />;
+		return <Pressable url={data} onPress={handlePress}
+				style={({pressed}) => [
+					{
+			  			backgroundColor: pressed ? themes.colors.brand.vermelhoClaro : themes.colors.brand.vermelhoEscuro,
+					},
+						styles.botao,
+		  		]}
+				><Text style={styles.btnTexto}>ABRIR LINK NO NAVEGADOR</Text></Pressable>
 	};
 
 	const handleBarCodeScanned = ({ type, data }) => {
 		(async () => {
-			console.log(data)	
-			const porra = await Linking.canOpenURL(data);
-			setSupported(porra);
+			const supported = await Linking.canOpenURL(data);
+			setSupported(supported);
 		})()
 		
 		setScanned(true);
@@ -72,21 +69,30 @@ export default function Scanner({navigation}) {
 	}
 
 	return (
+		
 		<View style={styles.container}>
 		{scanned ? (
 			<View>
-			<Text style={styles.data}>{data}</Text>
+				<View style={styles.fundourl}>
+					<Text style={styles.data}>{data}</Text>
+				</View>
 			{supported ? (
 				<OpenURLButton url={data}>Abrir Link no navegador</OpenURLButton>
 			) : (
 				<></>
 			)
 			}
-			<Button title={'Escanear novamente'} onPress={() => setScanned(false)} />
+
+			<Pressable onPress={() => setScanned(false)}
+				style={({pressed}) => [
+					{backgroundColor: pressed ? themes.colors.brand.vermelhoClaro : themes.colors.brand.vermelhoEscuro},
+					styles.botao]}>
+                <Text style={styles.btnTexto}>ESCANEAR NOVAMENTE</Text>
+            </Pressable>
 			</View>
 		) : (
 			<BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={StyleSheet.absoluteFillObject}>
-				<BotaoFlutuante onPress={pickImage} icon="file-find-outline" size={50}></BotaoFlutuante>
+				<BotaoFlutuante onPress={pickImage} icon="file-find-outline" size={75} style={styles.fileBtn}></BotaoFlutuante>
 			</BarCodeScanner>
 		)}
 		</View>
@@ -96,13 +102,20 @@ export default function Scanner({navigation}) {
 const styles = StyleSheet.create({
 	container: {
 		flex: 1,
-		backgroundColor: '#fff',
+		backgroundColor: themes.colors.brand.roxoClaro,
 		alignItems: 'center',
 		justifyContent: 'center',
 	},
+	fundourl: {
+		backgroundColor: themes.colors.brand.roxoEscuro,
+		borderRadius: 10,
+		borderWidth: 1
+	},
 	data: {
 		fontSize: 20,
-		marginVertical: 10,
+		color: 'black',
+		margin: 10,
+		padding: 15,
 		alignSelf: 'center'
 	},
 	texto: {
@@ -110,6 +123,25 @@ const styles = StyleSheet.create({
 		alignItems: 'center',
 		justifyContent: 'center',
 		alignSelf: 'center'
+	},
+	botao: {
+		//backgroundColor: themes.colors.brand.vermelhoEscuro,
+		marginTop: 15,
+		padding: 15,
+		borderRadius: 8,
+		borderWidth: 1
+	},
+	fileBtn: {
+		alignSelf: "center",
+		position: "absolute",
+		bottom: 50,
+	},
+	btnTexto: {
+		color: 'white',
+		alignItems: 'center',
+		justifyContent: 'center',
+		alignSelf: 'center',
+		fontWeight: 600
 	}
 });
 
