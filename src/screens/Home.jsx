@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image, Dimensions } from 'react-native'
+import { StyleSheet, View, Text, Image } from 'react-native'
 import BotaoFlutuante from '../components/BotaoFlutuante'
 import themes from '../themes'
 import { MotiView } from 'moti';
@@ -31,7 +31,7 @@ export default function Home({navigation}){
             <Text style={styles.texto}>SCAN<Text style={styles.subtexto}>dinavia</Text></Text>
           </View>
             <Image
-              source={require('../../assets/icon.png')}
+              source={require('../../assets/viking128px.png')}
               style={styles.button}/>
             <MotiView style={styles.container}>
               <Animate>
