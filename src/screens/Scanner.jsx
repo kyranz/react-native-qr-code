@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useCallback } from 'react';
-import { StyleSheet, Text, View, Linking, Alert, Pressable } from 'react-native';
+import { StyleSheet, Text, View, Linking, Alert, Pressable, Dimensions } from 'react-native';
 import { BarCodeScanner } from 'expo-barcode-scanner';
 import * as ImagePicker from 'expo-image-picker';
 import BotaoFlutuante from '../components/BotaoFlutuante';
@@ -96,10 +96,15 @@ export default function Scanner({navigation}) {
                 <Text style={styles.btnTexto}>ESCANEAR NOVAMENTE</Text>
             </Pressable>
 			</View>
-		) : (
-			<BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={StyleSheet.absoluteFillObject}>
+		) : ( 
+		<>
+				<BarCodeScanner onBarCodeScanned={scanned ? undefined : handleBarCodeScanned} style={{
+					width: Dimensions.get('screen').width * 1.5,
+					height: Dimensions.get('screen').height * 1.5,
+				}}>
+				</BarCodeScanner>
 				<BotaoFlutuante onPress={pickImage} icon="file-find-outline" size={75} style={styles.fileBtn}></BotaoFlutuante>
-			</BarCodeScanner>
+			</> 
 		)}
 		</View>
 	);
@@ -107,6 +112,7 @@ export default function Scanner({navigation}) {
 
 const styles = StyleSheet.create({
 	container: {
+		position: "relative",
 		flex: 1,
 		backgroundColor: themes.colors.brand.roxoClaro,
 		alignItems: 'center',
@@ -140,7 +146,7 @@ const styles = StyleSheet.create({
 	fileBtn: {
 		alignSelf: "center",
 		position: "absolute",
-		bottom: 50,
+		bottom: Dimensions.get('screen').height / 8,
 	},
 	btnTexto: {
 		color: 'white',

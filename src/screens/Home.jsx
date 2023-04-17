@@ -1,5 +1,5 @@
 import React from 'react'
-import { StyleSheet, View, Text, Image } from 'react-native'
+import { StyleSheet, View, Text, Image, Dimensions } from 'react-native'
 import BotaoFlutuante from '../components/BotaoFlutuante'
 import themes from '../themes'
 import { MotiView } from 'moti';
@@ -31,7 +31,7 @@ export default function Home({navigation}){
             <Text style={styles.texto}>SCAN<Text style={styles.subtexto}>dinavia</Text></Text>
           </View>
             <Image
-              source={require('../../assets/viking128px.png')}
+              source={require('../../assets/icon.png')}
               style={styles.button}/>
             <MotiView style={styles.container}>
               <Animate>
@@ -52,14 +52,9 @@ const styles = StyleSheet.create({
     },
     logo_fundo: {
       backgroundColor: themes.colors.brand.roxoEscuro,
-      marginTop: 20,
+      margin: 20,
       padding: 10,
       borderRadius: 16
-    },
-    data: {
-      fontSize: 20,
-      marginVertical: 10,
-      alignSelf: 'center'
     },
     texto: {
       color: '#e2e6e7',
